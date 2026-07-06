@@ -4,6 +4,9 @@
   "description": "Thunderbird-Add-on: E-Mail-Anhaenge per Kontextmenue in vordefinierte Ordner ablegen - mit mehreren Zielen pro Konto.",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "lint": "eslint src",
     "lint:ext": "web-ext lint -s src",
@@ -16,6 +19,6 @@
     "@eslint/js": "^9.13.0",
     "eslint": "^9.13.0",
     "sharp": "^0.33.5",
-    "web-ext": "^8.3.0"
+    "web-ext": "^10.4.0"
   }
 }
