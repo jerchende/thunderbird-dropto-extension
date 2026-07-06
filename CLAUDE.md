@@ -44,10 +44,12 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
   probiert deshalb mehrere Wege durch (Kandidaten-Tabs → `mailTabs`
   `getSelectedMessages` → Scan aller Tabs → `info.selectedMessages`). **Nicht** auf
   einen einzelnen Lookup zurückbauen.
-- **Dynamisches Menü.** Alle Ziele werden als versteckte Kinder von `dropto-root`
-  angelegt; `onShown` erkennt das Konto der Nachricht und blendet nur dessen
-  Ziele ein, danach `menus.refresh()`. Der Fallback-Eintrag bleibt als
-  Sicherheitsnetz sichtbar, falls die Kontoerkennung mal nicht greift.
+- **Dynamisches Menü.** Globale Ziele (`destinations["*"]`) sind immer sichtbar
+  und stehen oben; Konto-Ziele werden als versteckte Kinder von `dropto-root`
+  angelegt, `onShown` erkennt das Konto der Nachricht und blendet nur dessen
+  Ziele ein, danach `menus.refresh()`. Der Separator erscheint nur, wenn beide
+  Gruppen sichtbar sind; sind gar keine Ziele sichtbar, zeigt ein deaktivierter
+  Eintrag „Keine Ziele konfiguriert" an, dass das Menü leer ist.
 - **Download-Sandbox.** `downloads.download` schreibt **nur** relativ zum
   Thunderbird-Download-Ordner; `saveAs: false` unterdrückt den Dialog. Beliebige
   absolute Pfade bräuchten eine Experiment-API (Kern-Eingriff) — bewusst nicht
@@ -55,9 +57,11 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 - **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
   bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
   ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.
-- **Storage-Schema** (`storage.local`): `fallback`, `debug`,
-  `destinations: { [accountId]: [{ label, path }] }`. `path` ist relativ zum
-  Thunderbird-Download-Ordner. Schlüssel ist die `accountId` — stabil pro Profil.
+- **Storage-Schema** (`storage.local`): `debug`,
+  `destinations: { "*" | [accountId]: [{ label, path }] }`. Der Schlüssel `"*"`
+  hält kontounabhängige Ziele (Thunderbird-Konto-IDs heißen `account<N>`,
+  Kollision ausgeschlossen). `path` ist relativ zum Thunderbird-Download-Ordner.
+  Alte Schlüssel `baseDir`/`fallback` bleiben bewusst unmigriert liegen.
 - **Extension-ID nicht leichtfertig ändern.** `storage.local` hängt an der ID
   (`browser_specific_settings.gecko.id`); ein Wechsel = neues Add-on = leere
   Einstellungen.

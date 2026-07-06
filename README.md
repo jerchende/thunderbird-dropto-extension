@@ -15,7 +15,9 @@ Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
 - Mehrere Ziele je Konto, konfigurierbar über eine Einstellungsseite.
 - Automatische Kontoerkennung: nur die Ziele des passenden Kontos werden
   eingeblendet.
-- Fallback-Ziel für Konten ohne eigene Ziele.
+- Kontounabhängige Ziele („Alle Konten") erscheinen bei jeder E-Mail — oberhalb
+  der Konto-Ziele, durch eine Trennlinie abgesetzt. Ohne konfigurierte Ziele
+  zeigt das Menü einen deaktivierten Hinweis.
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
 - Optionales Debug-Logging.
@@ -39,7 +41,7 @@ werden alle Anhänge der Mail dorthin gelegt.
 
 **Add-ons und Themes → DropTo → Einstellungen**:
 
-- **Fallback-Ziel** – für Konten ohne eigenes Ziel (Standard `Sonstige`).
+- **Alle Konten** – kontounabhängige Ziele, erscheinen bei jeder E-Mail.
 - **Konten & Ziele** – je Konto beliebig viele Ziele:
   - **Name** (frei, erscheint im Menü; leer = Pfad wird angezeigt)
   - **Pfad** (relativ zum Download-Ordner von Thunderbird; Unterordner mit `/`,
