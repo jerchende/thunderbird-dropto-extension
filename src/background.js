@@ -8,24 +8,24 @@
  * unter <Download-Ordner>/<Ziel-Pfad>/.
  *
  * Konfiguration (storage.local, gepflegt in der Options-Seite):
- *   fallback     : Ziel-Pfad, wenn das Konto kein Ziel hat
- *   destinations : { [accountId]: [ { label, path } ] }
+ *   destinations : { "*" | [accountId]: [ { label, path } ] } - "*" = kontounabhaengig
  *   debug        : Konsolen-Logging
  */
 
 const ROOT_ID = "dropto-root";
-const FALLBACK_ID = "dropto::__fallback__";
+const SEPARATOR_ID = "dropto::__sep__";
+const EMPTY_ID = "dropto::__empty__";
+const GLOBAL_KEY = "*";
 const ATTACH_CONTEXTS = ["message_attachments", "all_message_attachments"];
 
 const DEFAULTS = Object.freeze({
-  fallback: "Sonstige",
   destinations: {},
   debug: false,
 });
 
 let debugEnabled = false;
 
-// menuItemId -> { accountId, path, label } | { fallback: true }
+// menuItemId -> { accountId, path, label } | { global: true, path, label }
 const itemMap = new Map();
 
 /* --------------------------------- Logging ------------------------------- */
@@ -62,8 +62,30 @@ async function rebuildMenu() {
     icons: { 16: "icons/icon-16.png", 32: "icons/icon-32.png" },
   });
 
+  // Globale Ziele: immer sichtbar, stehen vor den Konto-Zielen.
+  const globals = Array.isArray((cfg.destinations || {})[GLOBAL_KEY])
+    ? cfg.destinations[GLOBAL_KEY] : [];
+  let globalCount = 0;
+  globals.forEach((d, i) => {
+    if (!d || !d.path) return;
+    const id = `dropto::${GLOBAL_KEY}::${i}`;
+    const label = d.label && d.label.trim() ? d.label.trim() : d.path;
+    itemMap.set(id, { global: true, path: d.path, label });
+    globalCount++;
+    create({ id, parentId: ROOT_ID, title: label, contexts: ATTACH_CONTEXTS, visible: true });
+  });
+
+  // Trenner zwischen globalen und Konto-Zielen; onShown blendet ihn ein.
+  await create({
+    id: SEPARATOR_ID,
+    parentId: ROOT_ID,
+    type: "separator",
+    contexts: ATTACH_CONTEXTS,
+    visible: false,
+  });
+
   for (const [accountId, dests] of Object.entries(cfg.destinations || {})) {
-    if (!Array.isArray(dests)) continue;
+    if (accountId === GLOBAL_KEY || !Array.isArray(dests)) continue;
     dests.forEach((d, i) => {
       if (!d || !d.path) return;
       const id = `dropto::${accountId}::${i}`;
@@ -74,14 +96,14 @@ async function rebuildMenu() {
     });
   }
 
-  // Fallback als Sicherheitsnetz - initial sichtbar, damit das Menue nie leer ist.
-  itemMap.set(FALLBACK_ID, { fallback: true });
+  // Deaktivierter Hinweis, damit das Menue nie leer ist.
   await create({
-    id: FALLBACK_ID,
+    id: EMPTY_ID,
     parentId: ROOT_ID,
-    title: `Fallback: ${cfg.fallback}`,
+    title: "Keine Ziele konfiguriert",
     contexts: ATTACH_CONTEXTS,
-    visible: true,
+    enabled: false,
+    visible: globalCount === 0,
   });
 
   log("Menue aufgebaut:", itemMap.size, "Eintraege");
@@ -101,22 +123,20 @@ rebuildMenu();
 messenger.menus.onShown.addListener(async (info, tab) => {
   if (!info.contexts || !ATTACH_CONTEXTS.some((c) => info.contexts.includes(c))) return;
 
-  const cfg = await getConfig();
   const message = await getMessage(info, tab);
   const accountId = (message && message.folder && message.folder.accountId) || null;
 
   const updates = [];
-  let anyVisible = false;
+  let hasGlobals = false;
+  let anyAccountVisible = false;
   for (const [id, meta] of itemMap) {
-    if (meta.fallback) continue;
+    if (meta.global) { hasGlobals = true; continue; }
     const vis = !!accountId && meta.accountId === accountId;
-    if (vis) anyVisible = true;
+    if (vis) anyAccountVisible = true;
     updates.push(messenger.menus.update(id, { visible: vis }));
   }
-  updates.push(messenger.menus.update(FALLBACK_ID, {
-    visible: !anyVisible,
-    title: `Fallback: ${cfg.fallback}`,
-  }));
+  updates.push(messenger.menus.update(SEPARATOR_ID, { visible: hasGlobals && anyAccountVisible }));
+  updates.push(messenger.menus.update(EMPTY_ID, { visible: !hasGlobals && !anyAccountVisible }));
 
   try {
     await Promise.all(updates);
@@ -130,7 +150,6 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
   const meta = itemMap.get(info.menuItemId);
   if (!meta) return; // Obermenue oder fremder Eintrag
 
-  const cfg = await getConfig();
   try {
     const message = await getMessage(info, tab);
     if (!message) {
@@ -138,8 +157,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
       return;
     }
 
-    const relPath = meta.fallback ? cfg.fallback : meta.path;
-    const dir = sanitizePath(relPath);
+    const dir = sanitizePath(meta.path);
 
     const partNames = await resolvePartNames(info, message.id);
     if (!partNames.length) {
