@@ -1,10 +1,11 @@
 "use strict";
 
 const DEFAULTS = {
-  fallback: "Sonstige",
-  destinations: {}, // { [accountId]: [ { label, path } ] }
+  destinations: {}, // { "*" | [accountId]: [ { label, path } ] } - "*" = kontounabhaengig
   debug: false,
 };
+
+const GLOBAL_KEY = "*";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -16,18 +17,19 @@ document.addEventListener("DOMContentLoaded", init);
 async function init() {
   const cfg = await messenger.storage.local.get(DEFAULTS);
 
-  $("#fallback").value = cfg.fallback || "";
   $("#debug").checked = !!cfg.debug;
 
   await renderAccounts(cfg);
 
-  $("#fallback").addEventListener("input", scheduleSave);
   $("#debug").addEventListener("change", scheduleSave);
   $("#save").addEventListener("click", () => save(true));
 }
 
 async function renderAccounts(cfg) {
   const container = $("#accounts");
+  container.replaceChildren();
+  container.appendChild(renderGlobalBlock((cfg.destinations && cfg.destinations[GLOBAL_KEY]) || []));
+
   let accounts = [];
   try {
     accounts = await messenger.accounts.list();
@@ -36,7 +38,6 @@ async function renderAccounts(cfg) {
     return;
   }
 
-  container.replaceChildren();
   if (!accounts.length) {
     showMessage(container, "Keine Konten gefunden.");
     return;
@@ -49,21 +50,28 @@ async function renderAccounts(cfg) {
 
 function renderAccount(acc, dests) {
   const email = (acc.identities && acc.identities[0] && acc.identities[0].email) || "";
+  return renderDestBlock(acc.name || "(ohne Namen)", acc.type || "", email, acc.id, dests);
+}
 
+function renderGlobalBlock(dests) {
+  return renderDestBlock("Alle Konten", "kontounabhängig", "", GLOBAL_KEY, dests);
+}
+
+function renderDestBlock(name, tag, email, key, dests) {
   const block = document.createElement("div");
   block.className = "acct";
 
   const head = document.createElement("div");
   head.className = "acct-head";
-  const name = document.createElement("span");
-  name.className = "acct-name";
-  name.textContent = acc.name || "(ohne Namen)";
-  head.appendChild(name);
-  if (acc.type) {
-    const tag = document.createElement("span");
-    tag.className = "acct-tag";
-    tag.textContent = acc.type;
-    head.appendChild(tag);
+  const nameEl = document.createElement("span");
+  nameEl.className = "acct-name";
+  nameEl.textContent = name;
+  head.appendChild(nameEl);
+  if (tag) {
+    const tagEl = document.createElement("span");
+    tagEl.className = "acct-tag";
+    tagEl.textContent = tag;
+    head.appendChild(tagEl);
   }
   if (email) {
     const mail = document.createElement("span");
@@ -74,9 +82,9 @@ function renderAccount(acc, dests) {
 
   const list = document.createElement("div");
   list.className = "dests";
-  list.dataset.accountId = acc.id;
+  list.dataset.accountId = key;
 
-  (dests.length ? dests : []).forEach((d) => list.appendChild(destRow(d)));
+  dests.forEach((d) => list.appendChild(destRow(d)));
 
   const add = document.createElement("button");
   add.type = "button";
@@ -143,7 +151,6 @@ function collect() {
   });
 
   return {
-    fallback: cleanPath($("#fallback").value) || DEFAULTS.fallback,
     debug: $("#debug").checked,
     destinations,
   };
@@ -178,7 +185,7 @@ function showMessage(container, text) {
   const p = document.createElement("p");
   p.className = "loading";
   p.textContent = text;
-  container.replaceChildren(p);
+  container.appendChild(p);
 }
 
 /* Relativer Pfad: Schraegstriche bleiben Trenner, Segmente werden bereinigt. */
