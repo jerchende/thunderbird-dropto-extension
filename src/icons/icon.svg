@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Ordner: Rueckwand + Reiter -->
+  <rect x="14" y="44" width="100" height="66" rx="12" fill="#1D4ED8"/>
+  <rect x="14" y="34" width="46" height="22" rx="8" fill="#1D4ED8"/>
+
+  <!-- Dokument (leicht gekippt), steckt im Ordner -->
+  <g transform="rotate(-7 64 52)">
+    <rect x="40" y="14" width="52" height="70" rx="6" fill="#FFFFFF"/>
+    <rect x="48" y="27" width="36" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="48" y="39" width="36" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="48" y="51" width="22" height="5" rx="2.5" fill="#CBD5E1"/>
+    <rect x="48" y="66" width="36" height="9" rx="3.5" fill="#10B981"/>
+  </g>
+
+  <!-- Ordner: Vorderklappe -->
+  <path d="M12 70 v28 a12 12 0 0 0 12 12 h80 a12 12 0 0 0 12 -12 V66 a12 12 0 0 0 -12 -12 H60 l-6 -8 a6 6 0 0 0 -5 -3 H24 a12 12 0 0 0 -12 12 z" fill="#3B82F6"/>
+
+  <!-- Ablegen-Badge: Pfeil nach unten -->
+  <circle cx="99" cy="99" r="20" fill="#10B981" stroke="#FFFFFF" stroke-width="4"/>
+  <path d="M99 89 v15 M92 98 l7 7 l7 -7" fill="none" stroke="#FFFFFF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

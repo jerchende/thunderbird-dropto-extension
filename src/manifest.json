@@ -1,0 +1,36 @@
+{
+  "manifest_version": 2,
+  "name": "DropTo",
+  "version": "3.0.0",
+  "author": "Johannes",
+  "description": "Legt E-Mail-Anhaenge per Kontextmenue mit einem Klick in vordefinierte Ordner ab. Pro Konto lassen sich mehrere Ziele festlegen, die als Untermenue erscheinen.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "dropto@jerchen.local",
+      "strict_min_version": "115.0"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "64": "icons/icon-64.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "messagesRead",
+    "accountsRead",
+    "downloads",
+    "menus",
+    "notifications",
+    "storage"
+  ],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}

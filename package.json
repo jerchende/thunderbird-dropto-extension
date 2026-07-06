@@ -1,0 +1,21 @@
+{
+  "name": "dropto",
+  "version": "3.0.0",
+  "description": "Thunderbird-Add-on: E-Mail-Anhaenge per Kontextmenue in vordefinierte Ordner ablegen - mit mehreren Zielen pro Konto.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint src",
+    "lint:ext": "web-ext lint -s src",
+    "icons": "node scripts/render-icons.mjs",
+    "build": "web-ext build -s src -a dist --overwrite-dest --ignore-files=\"icons/icon.svg\" --filename \"dropto-{version}.xpi\"",
+    "start": "web-ext run -s src --verbose",
+    "sign": "web-ext sign -s src -a dist --channel unlisted"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "sharp": "^0.33.5",
+    "web-ext": "^8.3.0"
+  }
+}

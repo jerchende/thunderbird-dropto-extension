@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DropTo - Einstellungen</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="head">
+      <img src="../icons/icon-48.png" alt="" width="40" height="40">
+      <div>
+        <h1>DropTo</h1>
+        <p class="sub">Ziele pro Konto festlegen. Gespeichert wird unter
+          <code id="pathHint">~/Downloads/000_Rechnungen/&lt;Ziel&gt;/</code></p>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Allgemein</h2>
+      <div class="grid">
+        <label class="field">
+          <span>Basisordner (relativ zum Download-Ordner)</span>
+          <input type="text" id="baseDir" placeholder="000_Rechnungen" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="field">
+          <span>Fallback-Ziel (Konto ohne eigenes Ziel)</span>
+          <input type="text" id="fallback" placeholder="Sonstige" autocomplete="off" spellcheck="false">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Konten &amp; Ziele</h2>
+      <p class="hint">Pro Konto beliebig viele Ziele. Der <strong>Pfad</strong> ist relativ zum
+        Basisordner; Unterordner mit <code>/</code> möglich (z.&nbsp;B.
+        <code>folderA/Rechnungen</code>). Der <strong>Name</strong> ist frei und erscheint im Menü
+        (leer = Pfad). Kein Ziel = Fallback.</p>
+      <div id="accounts" class="accounts">
+        <p class="loading">Konten werden geladen&hellip;</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <label class="check">
+        <input type="checkbox" id="debug">
+        <span>Debug-Logging in die Konsole (Add-ons &rarr; Zahnrad &rarr; Add-ons debuggen &rarr; Untersuchen)</span>
+      </label>
+    </section>
+
+    <footer class="foot">
+      <button id="save" class="btn primary">Speichern</button>
+      <span id="status" class="status" role="status" aria-live="polite"></span>
+    </footer>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>
