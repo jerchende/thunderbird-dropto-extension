@@ -29,6 +29,8 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 - `src/manifest.json` — MV2, Permissions, `options_ui`, Icons.
 - `src/background.js` — Menüaufbau, `onShown`-Dynamik, `onClicked`-Speichern.
 - `src/options/` — Einstellungsseite (Vanilla JS/HTML/CSS, kein Framework).
+- `src/experiments/filesystem/` — Experiment `droptoFs` (privilegiert:
+  IOUtils-Schreiben an absolute Pfade, nativer Ordner-Picker).
 - `src/icons/icon.svg` — Icon-Quelle; PNGs sind generiert (nicht von Hand editieren).
 - `scripts/render-icons.mjs`, `.github/workflows/build.yml`, `eslint.config.mjs`.
 
@@ -50,10 +52,13 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
   Ziele ein, danach `menus.refresh()`. Der Separator erscheint nur, wenn beide
   Gruppen sichtbar sind; sind gar keine Ziele sichtbar, zeigt ein deaktivierter
   Eintrag „Keine Ziele konfiguriert" an, dass das Menü leer ist.
-- **Download-Sandbox.** `downloads.download` schreibt **nur** relativ zum
-  Thunderbird-Download-Ordner; `saveAs: false` unterdrückt den Dialog. Beliebige
-  absolute Pfade bräuchten eine Experiment-API (Kern-Eingriff) — bewusst nicht
-  enthalten. Der `filename` ist ein relativer Mehrsegment-Pfad.
+- **Zwei Speicherwege.** Relative Ziele: `downloads.download` (nur
+  Download-Ordner, `saveAs: false`, `filename` ist relativer Mehrsegment-Pfad).
+  Absolute Ziele (`isAbsolutePath`: `/`, `~/`, `C:\`): Experiment
+  `droptoFs.saveFile` via `IOUtils`. Absolute Pfade dürfen **nicht** durch
+  `sanitizePath` laufen (zerstört den Präfix) — nur der Dateiname wird mit
+  `sanitizeSeg` bereinigt, `..` weist das Experiment ab. Das Experiment
+  (`src/experiments/filesystem/`) bewusst schmal halten.
 - **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
   bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
   ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.
@@ -69,8 +74,10 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 ## Tooling-Hinweise
 
 - `web-ext lint` meldet zwei `MANIFEST_PERMISSIONS`-Warnungen für `messagesRead`
-  und `accountsRead` — der Firefox-Linter kennt die Thunderbird-Permissions
-  nicht. **Erwartbar, keine Fehler.** Der CI-Schritt ist deshalb informativ
+  und `accountsRead` sowie einen `MANIFEST_FIELD_PRIVILEGED`-**Error** für
+  `experiment_apis` — der Firefox-Linter kennt weder Thunderbird-Permissions
+  noch Thunderbird-Experiments (dort regulär unterstützt). **Erwartbar, kein
+  echter Fehler.** Der CI-Schritt ist deshalb informativ
   (`continue-on-error`).
 - Menü-/Speicherverhalten lässt sich nicht unit-testen. Live prüfen via
   `npm start` (TB-Binary) oder Add-ons → Zahnrad → „Add-ons debuggen" →

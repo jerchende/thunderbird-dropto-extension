@@ -18,6 +18,8 @@ Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
 - Kontounabhängige Ziele („Alle Konten") erscheinen bei jeder E-Mail — oberhalb
   der Konto-Ziele, durch eine Trennlinie abgesetzt. Ohne konfigurierte Ziele
   zeigt das Menü einen deaktivierten Hinweis.
+- Absolute Zielpfade (beginnend mit `/`, `~/` oder `C:\`) speichern außerhalb
+  des Download-Ordners — per Eingabe oder Ordner-Dialog (📁-Button).
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
 - Optionales Debug-Logging.
@@ -45,7 +47,8 @@ werden alle Anhänge der Mail dorthin gelegt.
 - **Konten & Ziele** – je Konto beliebig viele Ziele:
   - **Name** (frei, erscheint im Menü; leer = Pfad wird angezeigt)
   - **Pfad** (relativ zum Download-Ordner von Thunderbird; Unterordner mit `/`,
-    z. B. `folderA/Rechnungen`)
+    z. B. `folderA/Rechnungen` — oder absolut, z. B. `~/Documents/Rechnungen`;
+    der 📁-Button öffnet einen Ordner-Dialog)
 - **Debug-Logging**.
 
 Gespeichert wird automatisch (und per „Speichern"-Button) in `storage.local`.
@@ -60,10 +63,11 @@ Gespeichert wird automatisch (und per „Speichern"-Button) in `storage.local`.
   Anhänge* „Alle Dateien in diesem Ordner ablegen" auf `~/Downloads` stehen.
   Steht dort „Immer nachfragen", wird der Dialog dank `saveAs: false` trotzdem
   übersprungen.
-- Eine MailExtension kann via `downloads`-API **ohne Dialog nur in den
-  Download-Ordner bzw. dessen Unterordner** schreiben (Sandbox). Beliebige
-  absolute Pfade außerhalb bräuchten eine Experiment-API (Kern-Eingriff) – bewusst
-  nicht enthalten.
+- Relative Ziele nutzen die `downloads`-API (Sandbox: nur Download-Ordner und
+  Unterordner). Absolute Ziele schreibt das mitgelieferte Experiment `droptoFs`
+  direkt via `IOUtils` — deshalb zeigt Thunderbird bei der Installation eine
+  Warnung über vollen Zugriff, und diese Dateien erscheinen nicht in der
+  Download-Historie.
 - **Manifest V2** ist Absicht: persistenter Background, maximale Kompatibilität,
   keine Event-Page-/Service-Worker-Fallstricke. Läuft ab Thunderbird 115.
 
@@ -118,6 +122,10 @@ Für den Eigengebrauch genügt die unsignierte `.xpi` plus
 src/
   manifest.json
   background.js          # Menü (dynamisch) + Speichern-Logik
+  experiments/
+    filesystem/          # Experiment "droptoFs" (absolute Pfade, Ordner-Dialog)
+      schema.json
+      implementation.js
   options/               # Einstellungsseite
     options.html
     options.css
