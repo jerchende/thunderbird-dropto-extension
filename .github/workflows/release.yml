@@ -1,0 +1,41 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Tag muss zur Manifest-Version passen
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./src/manifest.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "Tag v$tag passt nicht zur Manifest-Version $version" >&2
+            exit 1
+          fi
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Build XPI
+        run: npm run build
+
+      - name: GitHub-Release erstellen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/*.xpi --generate-notes
