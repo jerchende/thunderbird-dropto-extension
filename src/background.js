@@ -5,10 +5,9 @@
  * Haengt ein Untermenue "DropTo" ins Anhang-Kontextmenue. Pro Konto koennen
  * mehrere Ziele konfiguriert sein; beim Aufklappen werden nur die Ziele des
  * Kontos der angezeigten Nachricht eingeblendet (onShown). Gespeichert wird
- * unter <Download-Ordner>/<Basisordner>/<Ziel-Pfad>/.
+ * unter <Download-Ordner>/<Ziel-Pfad>/.
  *
  * Konfiguration (storage.local, gepflegt in der Options-Seite):
- *   baseDir      : Basisordner relativ zum Download-Ordner
  *   fallback     : Ziel-Pfad, wenn das Konto kein Ziel hat
  *   destinations : { [accountId]: [ { label, path } ] }
  *   debug        : Konsolen-Logging
@@ -19,7 +18,6 @@ const FALLBACK_ID = "dropto::__fallback__";
 const ATTACH_CONTEXTS = ["message_attachments", "all_message_attachments"];
 
 const DEFAULTS = Object.freeze({
-  baseDir: "000_Rechnungen",
   fallback: "Sonstige",
   destinations: {},
   debug: false,
@@ -120,15 +118,6 @@ messenger.menus.onShown.addListener(async (info, tab) => {
     title: `Fallback: ${cfg.fallback}`,
   }));
 
-  let title = "DropTo";
-  if (accountId) {
-    try {
-      const acc = await messenger.accounts.get(accountId);
-      if (acc && acc.name) title = `DropTo \u2192 ${acc.name}`;
-    } catch (_) { /* egal */ }
-  }
-  updates.push(messenger.menus.update(ROOT_ID, { title }));
-
   try {
     await Promise.all(updates);
     await messenger.menus.refresh();
@@ -150,7 +139,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
     }
 
     const relPath = meta.fallback ? cfg.fallback : meta.path;
-    const dir = sanitizePath(`${cfg.baseDir}/${relPath}`);
+    const dir = sanitizePath(relPath);
 
     const partNames = await resolvePartNames(info, message.id);
     if (!partNames.length) {

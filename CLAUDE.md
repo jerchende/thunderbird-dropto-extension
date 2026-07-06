@@ -55,9 +55,9 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 - **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
   bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
   ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.
-- **Storage-Schema** (`storage.local`): `baseDir`, `fallback`, `debug`,
-  `destinations: { [accountId]: [{ label, path }] }`. `path` ist relativ zu
-  `baseDir`. Schlüssel ist die `accountId` — stabil pro Profil.
+- **Storage-Schema** (`storage.local`): `fallback`, `debug`,
+  `destinations: { [accountId]: [{ label, path }] }`. `path` ist relativ zum
+  Thunderbird-Download-Ordner. Schlüssel ist die `accountId` — stabil pro Profil.
 - **Extension-ID nicht leichtfertig ändern.** `storage.local` hängt an der ID
   (`browser_specific_settings.gecko.id`); ein Wechsel = neues Add-on = leere
   Einstellungen.

@@ -13,17 +13,23 @@
       <div>
         <h1>DropTo</h1>
         <p class="sub">Ziele pro Konto festlegen. Gespeichert wird unter
-          <code id="pathHint">~/Downloads/000_Rechnungen/&lt;Ziel&gt;/</code></p>
+          <code>&lt;Download-Ordner&gt;/&lt;Ziel&gt;/</code></p>
       </div>
     </header>
+
+    <div class="notice" role="note">
+      <p><strong>Wichtig:</strong> Alle Pfade sind relativ zum
+        <strong>Download-Ordner von Thunderbird</strong>. Dieser wird in den
+        Thunderbird-Einstellungen festgelegt: <em>Einstellungen &rarr; Allgemein &rarr;
+        Dateien &amp; Anhänge &rarr; „Alle Dateien in diesem Ordner ablegen"</em>.
+        Beispiel: Steht dort <code>~/Downloads</code>, wird das Ziel
+        <code>folderA/Rechnungen</code> unter
+        <code>~/Downloads/folderA/Rechnungen/</code> abgelegt.</p>
+    </div>
 
     <section class="card">
       <h2>Allgemein</h2>
       <div class="grid">
-        <label class="field">
-          <span>Basisordner (relativ zum Download-Ordner)</span>
-          <input type="text" id="baseDir" placeholder="000_Rechnungen" autocomplete="off" spellcheck="false">
-        </label>
         <label class="field">
           <span>Fallback-Ziel (Konto ohne eigenes Ziel)</span>
           <input type="text" id="fallback" placeholder="Sonstige" autocomplete="off" spellcheck="false">
@@ -34,7 +40,7 @@
     <section class="card">
       <h2>Konten &amp; Ziele</h2>
       <p class="hint">Pro Konto beliebig viele Ziele. Der <strong>Pfad</strong> ist relativ zum
-        Basisordner; Unterordner mit <code>/</code> möglich (z.&nbsp;B.
+        Download-Ordner von Thunderbird; Unterordner mit <code>/</code> möglich (z.&nbsp;B.
         <code>folderA/Rechnungen</code>). Der <strong>Name</strong> ist frei und erscheint im Menü
         (leer = Pfad). Kein Ziel = Fallback.</p>
       <div id="accounts" class="accounts">

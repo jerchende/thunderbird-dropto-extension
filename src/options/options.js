@@ -1,7 +1,6 @@
 "use strict";
 
 const DEFAULTS = {
-  baseDir: "000_Rechnungen",
   fallback: "Sonstige",
   destinations: {}, // { [accountId]: [ { label, path } ] }
   debug: false,
@@ -17,15 +16,11 @@ document.addEventListener("DOMContentLoaded", init);
 async function init() {
   const cfg = await messenger.storage.local.get(DEFAULTS);
 
-  $("#baseDir").value = cfg.baseDir || "";
   $("#fallback").value = cfg.fallback || "";
   $("#debug").checked = !!cfg.debug;
 
   await renderAccounts(cfg);
-  updatePathHint();
-  updatePrefixes();
 
-  $("#baseDir").addEventListener("input", () => { updatePathHint(); updatePrefixes(); scheduleSave(); });
   $("#fallback").addEventListener("input", scheduleSave);
   $("#debug").addEventListener("change", scheduleSave);
   $("#save").addEventListener("click", () => save(true));
@@ -112,11 +107,6 @@ function destRow(dest) {
   label.value = (dest && dest.label) || "";
   label.addEventListener("input", scheduleSave);
 
-  const pathWrap = document.createElement("div");
-  pathWrap.className = "path-wrap";
-  const prefix = document.createElement("span");
-  prefix.className = "path-prefix";
-  prefix.textContent = prefixText();
   const path = document.createElement("input");
   path.type = "text";
   path.className = "d-path";
@@ -125,7 +115,6 @@ function destRow(dest) {
   path.spellcheck = false;
   path.value = (dest && dest.path) || "";
   path.addEventListener("input", scheduleSave);
-  pathWrap.append(prefix, path);
 
   const remove = document.createElement("button");
   remove.type = "button";
@@ -135,7 +124,7 @@ function destRow(dest) {
   remove.textContent = "\u00d7";
   remove.addEventListener("click", () => { row.remove(); scheduleSave(); });
 
-  row.append(label, pathWrap, remove);
+  row.append(label, path, remove);
   return row;
 }
 
@@ -154,7 +143,6 @@ function collect() {
   });
 
   return {
-    baseDir: cleanSeg($("#baseDir").value) || DEFAULTS.baseDir,
     fallback: cleanPath($("#fallback").value) || DEFAULTS.fallback,
     debug: $("#debug").checked,
     destinations,
@@ -178,21 +166,6 @@ async function save(explicit) {
 
 /* --------------------------------- UI-Helfer ----------------------------- */
 
-function prefixText() {
-  const base = cleanSeg($("#baseDir").value) || DEFAULTS.baseDir;
-  return `${base}/`;
-}
-
-function updatePrefixes() {
-  const t = prefixText();
-  document.querySelectorAll(".path-prefix").forEach((el) => { el.textContent = t; });
-}
-
-function updatePathHint() {
-  const base = cleanSeg($("#baseDir").value) || DEFAULTS.baseDir;
-  $("#pathHint").textContent = `~/Downloads/${base}/<Ziel>/`;
-}
-
 function setStatus(text, ok) {
   const el = $("#status");
   el.textContent = text;
@@ -206,15 +179,6 @@ function showMessage(container, text) {
   p.className = "loading";
   p.textContent = text;
   container.replaceChildren(p);
-}
-
-/* Einzelnes Segment (Basisordner): keine Schraegstriche. */
-function cleanSeg(value) {
-  return String(value == null ? "" : value)
-    .replace(/[/\\]/g, "_")
-    .replace(/[\u0000-\u001f<>:"|?*]/g, "_")
-    .replace(/^\.+/, "")
-    .trim();
 }
 
 /* Relativer Pfad: Schraegstriche bleiben Trenner, Segmente werden bereinigt. */

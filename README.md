@@ -5,8 +5,8 @@ vordefinierte Ordner ablegt. **Pro Konto lassen sich mehrere Ziele festlegen**;
 sie erscheinen als Untermenü „DropTo". Das Konto der angezeigten Nachricht wird
 automatisch erkannt – im Menü tauchen nur dessen Ziele auf.
 
-Gespeichert wird unter `<Download-Ordner>/<Basisordner>/<Ziel-Pfad>/`, z. B.
-`~/Downloads/000_Rechnungen/folderA/Rechnungen/`.
+Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
+`~/Downloads/folderA/Rechnungen/`.
 
 ## Funktionen
 
@@ -14,7 +14,7 @@ Gespeichert wird unter `<Download-Ordner>/<Basisordner>/<Ziel-Pfad>/`, z. B.
   Anhang-Zusammenfassung („Alle Anhänge").
 - Mehrere Ziele je Konto, konfigurierbar über eine Einstellungsseite.
 - Automatische Kontoerkennung: nur die Ziele des passenden Kontos werden
-  eingeblendet; das Obermenü zeigt den Kontonamen.
+  eingeblendet.
 - Fallback-Ziel für Konten ohne eigene Ziele.
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
@@ -39,12 +39,11 @@ werden alle Anhänge der Mail dorthin gelegt.
 
 **Add-ons und Themes → DropTo → Einstellungen**:
 
-- **Basisordner** – relativ zum Download-Ordner (Standard `000_Rechnungen`).
 - **Fallback-Ziel** – für Konten ohne eigenes Ziel (Standard `Sonstige`).
 - **Konten & Ziele** – je Konto beliebig viele Ziele:
   - **Name** (frei, erscheint im Menü; leer = Pfad wird angezeigt)
-  - **Pfad** (relativ zum Basisordner; Unterordner mit `/`, z. B.
-    `folderA/Rechnungen`)
+  - **Pfad** (relativ zum Download-Ordner von Thunderbird; Unterordner mit `/`,
+    z. B. `folderA/Rechnungen`)
 - **Debug-Logging**.
 
 Gespeichert wird automatisch (und per „Speichern"-Button) in `storage.local`.
@@ -56,7 +55,7 @@ Gespeichert wird automatisch (und per „Speichern"-Button) in `storage.local`.
   eingeblendet und `menus.refresh()` aufgerufen.
 - Der Zielpfad ist **relativ zum Thunderbird-Download-Ordner**. Damit die Pfade
   unter `~/Downloads/…` liegen, muss unter *Einstellungen → Allgemein → Dateien &
-  Anhänge* „Alle Dateien in diesem Ordner speichern" auf `~/Downloads` stehen.
+  Anhänge* „Alle Dateien in diesem Ordner ablegen" auf `~/Downloads` stehen.
   Steht dort „Immer nachfragen", wird der Dialog dank `saveAs: false` trotzdem
   übersprungen.
 - Eine MailExtension kann via `downloads`-API **ohne Dialog nur in den
