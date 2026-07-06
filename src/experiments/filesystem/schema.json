@@ -1,0 +1,27 @@
+[
+  {
+    "namespace": "droptoFs",
+    "functions": [
+      {
+        "name": "saveFile",
+        "type": "function",
+        "async": true,
+        "description": "Schreibt data als Datei fileName in den absoluten Ordner dirPath (legt Ordner rekursiv an, nummeriert bei Namenskonflikt). Gibt den finalen Pfad zurueck.",
+        "parameters": [
+          { "name": "dirPath", "type": "string" },
+          { "name": "fileName", "type": "string" },
+          { "name": "data", "type": "object", "isInstanceOf": "ArrayBuffer", "additionalProperties": true }
+        ]
+      },
+      {
+        "name": "pickFolder",
+        "type": "function",
+        "async": true,
+        "description": "Oeffnet einen nativen Ordner-Dialog. Gibt den gewaehlten absoluten Pfad oder null (Abbruch) zurueck.",
+        "parameters": [
+          { "name": "title", "type": "string", "optional": true }
+        ]
+      }
+    ]
+  }
+]

@@ -32,5 +32,15 @@
   },
   "background": {
     "scripts": ["background.js"]
+  },
+  "experiment_apis": {
+    "droptoFs": {
+      "schema": "experiments/filesystem/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "paths": [["droptoFs"]],
+        "script": "experiments/filesystem/implementation.js"
+      }
+    }
   }
 }

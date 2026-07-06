@@ -32,4 +32,22 @@ export default [
       "no-control-regex": "off",
     },
   },
+  {
+    files: ["src/experiments/**/*.js"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "script",
+      globals: {
+        ChromeUtils: "readonly",
+        Components: "readonly",
+        Services: "readonly",
+        IOUtils: "readonly",
+        PathUtils: "readonly",
+      },
+    },
+    rules: {
+      // Die Experiment-Klasse (var droptoFs) laedt Thunderbird ueber den Namespace.
+      "no-unused-vars": "off",
+    },
+  },
 ];
