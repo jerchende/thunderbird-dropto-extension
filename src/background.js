@@ -157,7 +157,8 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
       return;
     }
 
-    const dir = sanitizePath(meta.path);
+    const absolute = isAbsolutePath(meta.path);
+    const dir = absolute ? meta.path.trim() : sanitizePath(meta.path);
 
     const partNames = await resolvePartNames(info, message.id);
     if (!partNames.length) {
@@ -169,14 +170,18 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
     for (const partName of partNames) {
       try {
         const file = await messenger.messages.getAttachmentFile(message.id, partName);
-        const url = URL.createObjectURL(file);
-        const id = await messenger.downloads.download({
-          url,
-          filename: `${dir}/${sanitizeSeg(file.name)}`,
-          conflictAction: "uniquify",
-          saveAs: false,
-        });
-        revokeWhenDone(id, url);
+        if (absolute) {
+          await messenger.droptoFs.saveFile(dir, sanitizeSeg(file.name), await file.arrayBuffer());
+        } else {
+          const url = URL.createObjectURL(file);
+          const id = await messenger.downloads.download({
+            url,
+            filename: `${dir}/${sanitizeSeg(file.name)}`,
+            conflictAction: "uniquify",
+            saveAs: false,
+          });
+          revokeWhenDone(id, url);
+        }
         saved++;
       } catch (perAtt) {
         err("Anhang", partName, "fehlgeschlagen:", perAtt);
@@ -243,6 +248,11 @@ async function resolvePartNames(info, messageId) {
   }
   const all = await messenger.messages.listAttachments(messageId);
   return all.map((a) => a.partName).filter(Boolean);
+}
+
+/* Absoluter Pfad? ("/", "~/" bzw. "~\", Windows "C:\" oder "C:/") */
+function isAbsolutePath(p) {
+  return /^(\/|~[/\\]|[A-Za-z]:[/\\])/.test(String(p == null ? "" : p));
 }
 
 // Einzelnes Pfadsegment / Dateiname entschaerfen.
