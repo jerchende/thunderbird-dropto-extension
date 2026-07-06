@@ -124,6 +124,21 @@ function destRow(dest) {
   path.value = (dest && dest.path) || "";
   path.addEventListener("input", scheduleSave);
 
+  const pick = document.createElement("button");
+  pick.type = "button";
+  pick.className = "icon-btn";
+  pick.title = "Ordner wählen…";
+  pick.setAttribute("aria-label", "Ordner wählen");
+  pick.textContent = "📁";
+  pick.addEventListener("click", async () => {
+    try {
+      const chosen = await messenger.droptoFs.pickFolder("Zielordner wählen");
+      if (chosen) { path.value = chosen; scheduleSave(); }
+    } catch (e) {
+      setStatus("Ordner-Dialog fehlgeschlagen: " + String(e), false);
+    }
+  });
+
   const remove = document.createElement("button");
   remove.type = "button";
   remove.className = "icon-btn";
@@ -132,7 +147,7 @@ function destRow(dest) {
   remove.textContent = "\u00d7";
   remove.addEventListener("click", () => { row.remove(); scheduleSave(); });
 
-  row.append(label, path, remove);
+  row.append(label, path, pick, remove);
   return row;
 }
 
@@ -188,12 +203,17 @@ function showMessage(container, text) {
   container.appendChild(p);
 }
 
-/* Relativer Pfad: Schraegstriche bleiben Trenner, Segmente werden bereinigt. */
+/* Pfad bereinigen: absolute Praefixe (/, ~/, C:\) bleiben erhalten,
+   Segmente werden bereinigt, Schraegstriche bleiben Trenner. */
 function cleanPath(value) {
-  return String(value == null ? "" : value)
+  const raw = String(value == null ? "" : value).trim();
+  const m = raw.match(/^(\/|~[/\\]|[A-Za-z]:[/\\])/);
+  const prefix = m ? m[0].replace(/\\/g, "/") : "";
+  const cleaned = raw.slice(prefix ? m[0].length : 0)
     .split(/[/\\]+/)
     .map((s) => s.trim())
     .filter((s) => s && s !== "." && s !== "..")
     .map((s) => s.replace(/[\u0000-\u001f<>:"|?*]/g, "_").replace(/^\.+/, ""))
     .join("/");
+  return prefix + cleaned;
 }
