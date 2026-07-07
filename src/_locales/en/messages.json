@@ -19,9 +19,7 @@
   "notifyErrorTitle": { "message": "Error while saving" },
 
   "optionsTitle": { "message": "DropTo - Settings" },
-  "optionsTagline": { "message": "Define targets per account — each one a folder where attachments get saved." },
-  "optionsNoticeTitle": { "message": "How it works:" },
-  "optionsNoticeBody": { "message": "Add targets per account — or under \"All accounts\" — and pick a folder for each via 📁. Attachments are saved straight into the chosen folder, anywhere on your file system." },
+  "optionsTagline": { "message": "Set up download targets and save attachments there with a single click — no more hunting for the right folder every time." },
 
   "globalCardTitle": { "message": "All accounts" },
   "globalCardHint": { "message": "Account-independent targets — shown for every e-mail, above the account targets." },

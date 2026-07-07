@@ -19,9 +19,7 @@
   "notifyErrorTitle": { "message": "Fehler beim Ablegen" },
 
   "optionsTitle": { "message": "DropTo - Einstellungen" },
-  "optionsTagline": { "message": "Ziele pro Konto festlegen — je ein Ordner, in den die Anhänge gespeichert werden." },
-  "optionsNoticeTitle": { "message": "So funktioniert's:" },
-  "optionsNoticeBody": { "message": "Lege pro Konto — oder unter „Alle Konten“ — Ziele an und wähle für jedes über 📁 einen Ordner. Die Anhänge werden direkt in den gewählten Ordner gespeichert, an beliebiger Stelle im Dateisystem." },
+  "optionsTagline": { "message": "Lege Download-Ziele fest und lege Anhänge mit einem Klick dort ab — ohne jedes Mal den Ordner suchen zu müssen." },
 
   "globalCardTitle": { "message": "Alle Konten" },
   "globalCardHint": { "message": "Kontounabhängige Ziele — erscheinen bei jeder E-Mail oberhalb der Konto-Ziele." },
