@@ -78,6 +78,11 @@ schlagen `npm install`/`build` mit dem Default-Node fehl.
   stehen fix auf `0.0.0` (Snapshot-Marker für lokale/CI-Builds) und werden NIE
   manuell gebumpt; `release.yml` stempelt beim Tag-Build (`vX.Y.Z`) die
   Tag-Version ins Manifest.
+- **`strict_max_version` pflegen.** ATN verlangt für Experiments eine
+  Obergrenze in `browser_specific_settings.gecko.strict_max_version`
+  (aktuell `153.*`). Thunderbird-Versionen jenseits der Grenze installieren
+  das Add-on nicht mehr — bei neuen TB-Releases prüfen, anheben und ein neues
+  Release taggen. NICHT entfernen (ATN-Upload schlägt sonst hart fehl).
 - **UI-Texte nur über `_locales`.** Keine hartkodierten sichtbaren Strings:
   JS via `messenger.i18n.getMessage` (options: Helfer `t()`), statisches HTML
   via `data-i18n`-Attribut + `localize()`. `de` und `en` müssen dieselben
