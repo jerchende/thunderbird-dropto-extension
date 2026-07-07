@@ -1,0 +1,27 @@
+[
+  {
+    "namespace": "droptoMenu",
+    "functions": [
+      {
+        "name": "setDestinations",
+        "type": "function",
+        "async": true,
+        "description": "Aktuelle Ziel-Struktur (destinations aus storage.local) fuer den Menueaufbau cachen.",
+        "parameters": [
+          { "name": "destinations", "type": "object", "additionalProperties": true }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "name": "onTargetClicked",
+        "type": "function",
+        "description": "Ein DropTo-Ziel im Speichern-Button-Dropdown wurde angeklickt.",
+        "parameters": [
+          { "name": "message", "$ref": "messages.MessageHeader" },
+          { "name": "path", "type": "string" }
+        ]
+      }
+    ]
+  }
+]
