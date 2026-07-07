@@ -68,7 +68,12 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
   Klicks feuern `onTargetClicked(message, path)`, gespeichert wird im
   Background über `saveAttachments`. Fehlen die Popups nach einem TB-Umbau,
   degradiert das Feature still — niemals werfen. Ziel-Struktur wird per
-  `setDestinations` aus `rebuildMenu()` gepusht.
+  `setDestinations` aus `rebuildMenu()` gepusht. **Achtung Verschachtelung:**
+  `about:message` steckt im 3-Pane in `about:3pane` (Top-Fenster → Tab-Browser
+  → `about:3pane` → `messageBrowser`); der Startup-Scan MUSS rekursiv über
+  `browser.contentDocument`-Grenzen absteigen, `querySelectorAll` auf dem
+  Top-Fenster findet es nicht. Der `chrome-document-loaded`-Observer greift
+  nur für Dokumente, die NACH der Experiment-Initialisierung laden.
 - **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
   bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
   ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.

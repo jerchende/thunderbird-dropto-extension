@@ -157,6 +157,7 @@ var droptoMenu = class extends ExtensionCommon.ExtensionAPI {
       }
       if (!entries.length) return;
       state.docEntries.set(doc, entries);
+      console.log("[DropTo] droptoMenu: Save-Button-Popups gehookt");
       doc.defaultView.addEventListener("unload", () => unhookDoc(doc), { once: true });
     };
 
@@ -169,14 +170,21 @@ var droptoMenu = class extends ExtensionCommon.ExtensionAPI {
     };
     Services.obs.addObserver(state.observer, "chrome-document-loaded");
 
-    // Bereits offene Nachrichten-Ansichten einsammeln.
+    // Bereits offene Nachrichten-Ansichten einsammeln. about:message steckt
+    // im 3-Pane VERSCHACHTELT (messenger.xhtml -> Tab-Browser -> about:3pane
+    // -> messageBrowser) - deshalb rekursiv ueber Browser-Grenzen absteigen.
+    const scanDoc = (doc, depth) => {
+      if (!doc || depth > 3) return;
+      if (doc.documentURI === "about:message") {
+        hookDoc(doc);
+        return;
+      }
+      for (const b of doc.querySelectorAll("browser")) {
+        try { scanDoc(b.contentDocument, depth + 1); } catch (_) { /* fremd */ }
+      }
+    };
     for (const win of Services.wm.getEnumerator(null)) {
-      try {
-        for (const b of win.document.querySelectorAll("browser")) {
-          const doc = b.contentDocument;
-          if (doc && doc.documentURI === "about:message") hookDoc(doc);
-        }
-      } catch (_) { /* Fenster ohne Browser */ }
+      try { scanDoc(win.document, 0); } catch (_) { /* Fenster ohne Browser */ }
     }
 
     this.cleanup = () => {
