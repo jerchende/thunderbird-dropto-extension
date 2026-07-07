@@ -22,6 +22,9 @@ npm run build        # -> dist/dropto-<version>.xpi
 npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird"
 ```
 
+**Node ≥ 20 nötig** (web-ext 10); `.nvmrc` = 22, also vorab `nvm use` — sonst
+schlagen `npm install`/`build` mit dem Default-Node fehl.
+
 **Vor jedem Commit:** `npm run lint` und `npm run build` müssen grün sein.
 
 ## Struktur

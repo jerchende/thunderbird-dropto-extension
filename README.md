@@ -66,7 +66,8 @@ Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurze
 
 ## Entwicklung
 
-Voraussetzungen: Node.js ≥ 18.
+Voraussetzungen: Node.js ≥ 20 (web-ext 10). Das Repo hat eine `.nvmrc` (22) —
+vorab `nvm use` ausführen.
 
 ```bash
 npm install          # Dependencies
