@@ -18,10 +18,8 @@ Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
 - Kontounabhängige Ziele („Alle Konten") erscheinen bei jeder E-Mail — oberhalb
   der Konto-Ziele, durch eine Trennlinie abgesetzt. Ohne konfigurierte Ziele
   zeigt das Menü einen deaktivierten Hinweis.
-- Absolute Zielpfade (beginnend mit `/`, `~/` oder `C:\`) speichern außerhalb
-  des Download-Ordners — per Eingabe oder Ordner-Dialog (📁-Button).
-- DropTo-Einträge auch im Dropdown des „Speichern"/„Alle speichern"-Buttons
-  der Anhangsleiste (speichern alle Anhänge der Mail).
+- Jedes Ziel ist ein frei gewählter Ordner (über den 📁-Button); die Anhänge
+  landen direkt darin — an beliebiger Stelle im Dateisystem.
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
 - Optionales Debug-Logging.
@@ -66,15 +64,10 @@ Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurze
   Anhänge* „Alle Dateien in diesem Ordner ablegen" auf `~/Downloads` stehen.
   Steht dort „Immer nachfragen", wird der Dialog dank `saveAs: false` trotzdem
   übersprungen.
-- Relative Ziele nutzen die `downloads`-API (Sandbox: nur Download-Ordner und
-  Unterordner). Absolute Ziele schreibt das mitgelieferte Experiment `droptoFs`
-  direkt via `IOUtils` — deshalb zeigt Thunderbird bei der Installation eine
-  Warnung über vollen Zugriff, und diese Dateien erscheinen nicht in der
-  Download-Historie.
-- Das zweite Experiment `droptoMenu` hängt die DropTo-Einträge in die
-  Dropdowns der Speichern-Buttons der Anhangsleiste. Es nutzt
-  Thunderbird-interne IDs — nach einem TB-Umbau fehlt der Eintrag
-  schlimmstenfalls einfach, der Rest des Add-ons bleibt unberührt.
+- Die Anhänge schreibt das mitgelieferte Experiment `droptoFs` direkt via
+  `IOUtils` in den gewählten Ordner — deshalb zeigt Thunderbird bei der
+  Installation eine Warnung über vollen Zugriff, und diese Dateien erscheinen
+  nicht in der Download-Historie.
 - **Manifest V2** ist Absicht: persistenter Background, maximale Kompatibilität,
   keine Event-Page-/Service-Worker-Fallstricke. Läuft ab Thunderbird 115.
 
@@ -130,10 +123,7 @@ src/
   manifest.json
   background.js          # Menü (dynamisch) + Speichern-Logik
   experiments/
-    filesystem/          # Experiment "droptoFs" (absolute Pfade, Ordner-Dialog)
-      schema.json
-      implementation.js
-    saveallmenu/         # Experiment "droptoMenu" (Save-Button-Dropdown)
+    filesystem/          # Experiment "droptoFs" (Ordner-Dialog + Schreiben)
       schema.json
       implementation.js
   options/               # Einstellungsseite

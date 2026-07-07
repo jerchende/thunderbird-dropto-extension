@@ -106,11 +106,6 @@ async function rebuildMenu() {
     visible: globalCount === 0,
   });
 
-  // Ziel-Struktur ans Save-Button-Dropdown-Experiment pushen.
-  try {
-    await messenger.droptoMenu.setDestinations(cfg.destinations || {});
-  } catch (e) { warn("setDestinations:", e && e.message); }
-
   log("Menue aufgebaut:", itemMap.size, "Eintraege");
 }
 
@@ -170,18 +165,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-/* DropTo-Eintraege im "Speichern"/"Alle speichern"-Dropdown (Experiment droptoMenu). */
-messenger.droptoMenu.onTargetClicked.addListener(async (message, path) => {
-  try {
-    const atts = await messenger.messages.listAttachments(message.id);
-    await saveAttachments(message, atts.map((a) => a.partName), path);
-  } catch (e) {
-    err("SaveAll-Menue:", e);
-    await notify("Fehler beim Ablegen", String(e && e.message ? e.message : e));
-  }
-});
-
-/* Anhaenge (partNames) einer Nachricht ins Ziel path ablegen (relativ oder absolut). */
+/* Anhaenge (partNames) einer Nachricht in den absoluten Zielordner path ablegen. */
 async function saveAttachments(message, partNames, path) {
   const absolute = isAbsolutePath(path);
   const dir = absolute ? path.trim() : sanitizePath(path);

@@ -41,14 +41,6 @@
         "paths": [["droptoFs"]],
         "script": "experiments/filesystem/implementation.js"
       }
-    },
-    "droptoMenu": {
-      "schema": "experiments/saveallmenu/schema.json",
-      "parent": {
-        "scopes": ["addon_parent"],
-        "paths": [["droptoMenu"]],
-        "script": "experiments/saveallmenu/implementation.js"
-      }
     }
   }
 }
