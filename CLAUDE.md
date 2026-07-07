@@ -64,9 +64,12 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 - **Save-Button-Dropdown (`droptoMenu`).** Das Experiment
   `src/experiments/saveallmenu/` injiziert bei `popupshowing` in die Popups
   `attachmentSaveAllSingleMenu`/`attachmentSaveAllMultipleMenu` von
-  `about:message` (IDs gegen comm-central verifiziert). Es baut NUR Menüs;
-  Klicks feuern `onTargetClicked(message, path)`, gespeichert wird im
-  Background über `saveAttachments`. Fehlen die Popups nach einem TB-Umbau,
+  `about:message` (IDs gegen comm-central verifiziert). Es baut NUR Menüs —
+  und zwar **flache Einträge** (`DropTo: <Ziel>`), KEIN Untermenü: dynamisch
+  injizierte `menu`/`menupopup`-Konstrukte öffnen unter den nativen
+  macOS-Menüs nicht (Inhalte werden beim Öffnen einmalig ins NSMenu
+  übersetzt, Bug 1705842). Klicks feuern `onTargetClicked(message, path)`,
+  gespeichert wird im Background über `saveAttachments`. Fehlen die Popups nach einem TB-Umbau,
   degradiert das Feature still — niemals werfen. Ziel-Struktur wird per
   `setDestinations` aus `rebuildMenu()` gepusht. **Achtung Verschachtelung:**
   `about:message` steckt im 3-Pane in `about:3pane` (Top-Fenster → Tab-Browser

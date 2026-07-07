@@ -93,42 +93,39 @@ var droptoMenu = class extends ExtensionCommon.ExtensionAPI {
       for (const fire of state.fireCallbacks) fire(msgHdr, path);
     };
 
+    /* Flache Eintraege statt Untermenue: dynamisch injizierte menu/menupopup-
+     * Konstrukte werden von den nativen macOS-Menues nicht als oeffnebares
+     * Submenu uebernommen (Inhalte werden beim Oeffnen einmalig ins NSMenu
+     * uebersetzt, Bug 1705842). Top-Level-Items funktionieren zuverlaessig. */
     const injectMenu = (doc, popup) => {
       for (const n of popup.querySelectorAll("." + MENU_CLASS)) n.remove();
 
+      const nodes = [];
       const sep = doc.createXULElement("menuseparator");
       sep.classList.add(MENU_CLASS);
-      const menu = doc.createXULElement("menu");
-      menu.classList.add(MENU_CLASS);
-      menu.setAttribute("label", "DropTo");
-      const sub = doc.createXULElement("menupopup");
+      nodes.push(sep);
 
       const targets = collectTargets(doc.defaultView);
       if (!targets.length) {
         const item = doc.createXULElement("menuitem");
-        item.setAttribute("label", "Keine Ziele konfiguriert");
+        item.classList.add(MENU_CLASS);
+        item.setAttribute("label", "DropTo: Keine Ziele konfiguriert");
         item.setAttribute("disabled", "true");
-        sub.appendChild(item);
+        nodes.push(item);
       } else {
-        let lastGroup = null;
         for (const t of targets) {
-          if (lastGroup && t.group !== lastGroup) {
-            sub.appendChild(doc.createXULElement("menuseparator"));
-          }
-          lastGroup = t.group;
           const item = doc.createXULElement("menuitem");
-          item.setAttribute("label", t.label);
+          item.classList.add(MENU_CLASS);
+          item.setAttribute("label", `DropTo: ${t.label}`);
           item.addEventListener("command", (ev) => {
             ev.stopPropagation();
             onPick(doc.defaultView, t.path);
           });
-          sub.appendChild(item);
+          nodes.push(item);
         }
       }
 
-      menu.appendChild(sub);
-      popup.appendChild(sep);
-      popup.appendChild(menu);
+      for (const n of nodes) popup.appendChild(n);
     };
 
     const unhookDoc = (doc) => {
