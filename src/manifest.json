@@ -21,7 +21,6 @@
   "permissions": [
     "messagesRead",
     "accountsRead",
-    "downloads",
     "menus",
     "notifications",
     "storage"

@@ -7,7 +7,7 @@ werden dürfen.
 ## Projekt
 
 DropTo — Thunderbird-MailExtension (Manifest V2). Legt E-Mail-Anhänge per
-Kontextmenü in Ordner unter dem Download-Ordner ab; pro Konto mehrere Ziele, die
+Kontextmenü in frei gewählte absolute Ordner ab; pro Konto mehrere Ziele, die
 als Untermenü erscheinen. Konfiguration in `storage.local`, gepflegt über die
 Options-Seite.
 
@@ -38,7 +38,7 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 
 - **Manifest V2 ist Absicht.** Persistenter Background, maximale Kompatibilität,
   keine Event-Page-/Service-Worker-Fallstricke. Kein Wechsel auf MV3 ohne
-  konkreten Grund (u. a. `URL.createObjectURL` und `menus`-Timing).
+  konkreten Grund (u. a. `menus`-Timing und die geladenen Experiment-APIs).
 - **Nachrichten-Ermittlung ist heikel.** Im `message_attachments`-Kontext liefert
   `info` zwar `attachments`, aber **kein** `selectedMessages`/`displayedFolder`,
   und der übergebene `tab` ist teils `{ type: null }`, sodass
@@ -52,21 +52,23 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
   Ziele ein, danach `menus.refresh()`. Der Separator erscheint nur, wenn beide
   Gruppen sichtbar sind; sind gar keine Ziele sichtbar, zeigt ein deaktivierter
   Eintrag „Keine Ziele konfiguriert" an, dass das Menü leer ist.
-- **Zwei Speicherwege.** Relative Ziele: `downloads.download` (nur
-  Download-Ordner, `saveAs: false`, `filename` ist relativer Mehrsegment-Pfad).
-  Absolute Ziele (`isAbsolutePath`: `/`, `~/`, `C:\`): Experiment
-  `droptoFs.saveFile` via `IOUtils`. Absolute Pfade dürfen **nicht** durch
-  `sanitizePath` laufen (zerstört den Präfix) — nur der Dateiname wird mit
-  `sanitizeSeg` bereinigt, `..` weist das Experiment ab. Das Experiment
+- **Ein Speicherweg (`droptoFs`).** Alle Ziele sind absolute Ordner (per
+  Ordner-Dialog gewählt). `saveAttachments` reicht den Pfad ungefiltert an
+  `droptoFs.saveFile` (Experiment, via `IOUtils`) — nur der Dateiname wird mit
+  `sanitizeSeg` bereinigt, `..` im Ordnerpfad weist das Experiment ab. KEINE
+  `downloads`-API mehr (Permission entfernt). Das Experiment
   (`src/experiments/filesystem/`) bewusst schmal halten.
-- **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
-  bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
-  ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.
+- **Dateinamen-Sanitizing** über `sanitizeSeg` (background) bzw. `cleanPath`
+  (options): Steuerzeichen/`<>:"|?*` werden ersetzt, `.`/`..` fallen raus. In
+  der ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**. Der
+  Ordnerpfad selbst kommt aus dem Picker und bleibt (bis auf den Dateinamen)
+  unangetastet.
 - **Storage-Schema** (`storage.local`): `debug`,
   `destinations: { "*" | [accountId]: [{ label, path }] }`. Der Schlüssel `"*"`
   hält kontounabhängige Ziele (Thunderbird-Konto-IDs heißen `account<N>`,
-  Kollision ausgeschlossen). `path` ist relativ zum Thunderbird-Download-Ordner.
-  Alte Schlüssel `baseDir`/`fallback` bleiben bewusst unmigriert liegen.
+  Kollision ausgeschlossen). `path` ist ein absoluter Ordnerpfad (per
+  Ordner-Dialog gewählt). Alte Schlüssel `baseDir`/`fallback` und alte relative
+  `path`-Werte bleiben bewusst unmigriert liegen.
 - **Extension-ID nicht leichtfertig ändern.** `storage.local` hängt an der ID
   (`browser_specific_settings.gecko.id`); ein Wechsel = neues Add-on = leere
   Einstellungen.

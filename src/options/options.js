@@ -123,11 +123,21 @@ function destRow(dest) {
   const path = document.createElement("input");
   path.type = "text";
   path.className = "d-path";
-  path.placeholder = "z. B. folderA/Rechnungen";
+  path.placeholder = "Ordner über 📁 wählen";
+  path.readOnly = true;
   path.autocomplete = "off";
   path.spellcheck = false;
   path.value = (dest && dest.path) || "";
-  path.addEventListener("input", scheduleSave);
+
+  const openPicker = async () => {
+    try {
+      const chosen = await messenger.droptoFs.pickFolder("Zielordner wählen");
+      if (chosen) { path.value = chosen; scheduleSave(); }
+    } catch (e) {
+      setStatus("Ordner-Dialog fehlgeschlagen: " + String(e), false);
+    }
+  };
+  path.addEventListener("click", openPicker);
 
   const pick = document.createElement("button");
   pick.type = "button";
@@ -135,14 +145,7 @@ function destRow(dest) {
   pick.title = "Ordner wählen…";
   pick.setAttribute("aria-label", "Ordner wählen");
   pick.textContent = "📁";
-  pick.addEventListener("click", async () => {
-    try {
-      const chosen = await messenger.droptoFs.pickFolder("Zielordner wählen");
-      if (chosen) { path.value = chosen; scheduleSave(); }
-    } catch (e) {
-      setStatus("Ordner-Dialog fehlgeschlagen: " + String(e), false);
-    }
-  });
+  pick.addEventListener("click", openPicker);
 
   const remove = document.createElement("button");
   remove.type = "button";

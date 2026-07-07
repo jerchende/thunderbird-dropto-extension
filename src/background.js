@@ -5,7 +5,7 @@
  * Haengt ein Untermenue "DropTo" ins Anhang-Kontextmenue. Pro Konto koennen
  * mehrere Ziele konfiguriert sein; beim Aufklappen werden nur die Ziele des
  * Kontos der angezeigten Nachricht eingeblendet (onShown). Gespeichert wird
- * unter <Download-Ordner>/<Ziel-Pfad>/.
+ * in den je Ziel gewaehlten absoluten Ordner (via Experiment droptoFs).
  *
  * Konfiguration (storage.local, gepflegt in der Options-Seite):
  *   destinations : { "*" | [accountId]: [ { label, path } ] } - "*" = kontounabhaengig
@@ -167,8 +167,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
 
 /* Anhaenge (partNames) einer Nachricht in den absoluten Zielordner path ablegen. */
 async function saveAttachments(message, partNames, path) {
-  const absolute = isAbsolutePath(path);
-  const dir = absolute ? path.trim() : sanitizePath(path);
+  const dir = String(path == null ? "" : path).trim();
 
   if (!partNames.length) {
     await notify("Kein Anhang", "Kein Anhang zum Speichern gefunden.");
@@ -179,18 +178,7 @@ async function saveAttachments(message, partNames, path) {
   for (const partName of partNames) {
     try {
       const file = await messenger.messages.getAttachmentFile(message.id, partName);
-      if (absolute) {
-        await messenger.droptoFs.saveFile(dir, sanitizeSeg(file.name), await file.arrayBuffer());
-      } else {
-        const url = URL.createObjectURL(file);
-        const id = await messenger.downloads.download({
-          url,
-          filename: `${dir}/${sanitizeSeg(file.name)}`,
-          conflictAction: "uniquify",
-          saveAs: false,
-        });
-        revokeWhenDone(id, url);
-      }
+      await messenger.droptoFs.saveFile(dir, sanitizeSeg(file.name), await file.arrayBuffer());
       saved++;
     } catch (perAtt) {
       err("Anhang", partName, "fehlgeschlagen:", perAtt);
@@ -255,11 +243,6 @@ async function resolvePartNames(info, messageId) {
   return all.map((a) => a.partName).filter(Boolean);
 }
 
-/* Absoluter Pfad? ("/", "~/" bzw. "~\", Windows "C:\" oder "C:/") */
-function isAbsolutePath(p) {
-  return /^(\/|~[/\\]|[A-Za-z]:[/\\])/.test(String(p == null ? "" : p));
-}
-
 // Einzelnes Pfadsegment / Dateiname entschaerfen.
 function sanitizeSeg(name) {
   const cleaned = String(name == null ? "" : name)
@@ -268,28 +251,6 @@ function sanitizeSeg(name) {
     .replace(/^\.+/, "_")
     .trim();
   return cleaned || "unbenannt";
-}
-
-// Mehrsegmentigen relativen Pfad bereinigen (Schraegstriche bleiben Trenner).
-function sanitizePath(p) {
-  const segs = String(p == null ? "" : p)
-    .split(/[/\\]+/)
-    .map((s) => s.trim())
-    .filter((s) => s && s !== "." && s !== "..")
-    .map((s) => sanitizeSeg(s));
-  return segs.join("/") || "unbenannt";
-}
-
-function revokeWhenDone(downloadId, url) {
-  const listener = (delta) => {
-    if (delta.id === downloadId && delta.state &&
-        (delta.state.current === "complete" || delta.state.current === "interrupted")) {
-      URL.revokeObjectURL(url);
-      messenger.downloads.onChanged.removeListener(listener);
-    }
-  };
-  messenger.downloads.onChanged.addListener(listener);
-  setTimeout(() => { try { URL.revokeObjectURL(url); } catch (_) { /* ignore */ } }, 120000);
 }
 
 async function notify(title, message) {

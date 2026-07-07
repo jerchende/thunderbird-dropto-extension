@@ -80,6 +80,7 @@ input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px
 .dests { display: flex; flex-direction: column; gap: 8px; }
 .dest-row { display: grid; grid-template-columns: 190px 1fr auto auto; gap: 8px; align-items: center; }
 @media (max-width: 560px) { .dest-row { grid-template-columns: 1fr; } }
+.d-path[readonly] { cursor: pointer; }
 
 .icon-btn {
   flex: none; width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px;

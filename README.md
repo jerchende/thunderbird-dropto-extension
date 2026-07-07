@@ -5,8 +5,8 @@ vordefinierte Ordner ablegt. **Pro Konto lassen sich mehrere Ziele festlegen**;
 sie erscheinen als Untermenü „DropTo". Das Konto der angezeigten Nachricht wird
 automatisch erkannt – im Menü tauchen nur dessen Ziele auf.
 
-Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
-`~/Downloads/folderA/Rechnungen/`.
+Jedes Ziel ist ein frei gewählter Ordner; die Anhänge landen mit einem Klick
+direkt darin — an beliebiger Stelle im Dateisystem.
 
 ## Funktionen
 
@@ -45,10 +45,8 @@ werden alle Anhänge der Mail dorthin gelegt.
 
 - **Alle Konten** – kontounabhängige Ziele, erscheinen bei jeder E-Mail.
 - **Konten & Ziele** – je Konto beliebig viele Ziele:
-  - **Name** (frei, erscheint im Menü; leer = Pfad wird angezeigt)
-  - **Pfad** (relativ zum Download-Ordner von Thunderbird; Unterordner mit `/`,
-    z. B. `folderA/Rechnungen` — oder absolut, z. B. `~/Documents/Rechnungen`;
-    der 📁-Button öffnet einen Ordner-Dialog)
+  - **Name** (frei, erscheint im Menü; leer = Ordnerpfad wird angezeigt)
+  - **Ordner** (über den 📁-Button gewählt; beliebige Stelle im Dateisystem)
 - **Debug-Logging**.
 
 Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurzes
@@ -59,11 +57,6 @@ Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurze
 - Das Menü wird beim Aufklappen dynamisch aktualisiert (`menus.onShown`):
   Kontoerkennung über die angezeigte Nachricht, dann werden die passenden Ziele
   eingeblendet und `menus.refresh()` aufgerufen.
-- Der Zielpfad ist **relativ zum Thunderbird-Download-Ordner**. Damit die Pfade
-  unter `~/Downloads/…` liegen, muss unter *Einstellungen → Allgemein → Dateien &
-  Anhänge* „Alle Dateien in diesem Ordner ablegen" auf `~/Downloads` stehen.
-  Steht dort „Immer nachfragen", wird der Dialog dank `saveAs: false` trotzdem
-  übersprungen.
 - Die Anhänge schreibt das mitgelieferte Experiment `droptoFs` direkt via
   `IOUtils` in den gewählten Ordner — deshalb zeigt Thunderbird bei der
   Installation eine Warnung über vollen Zugriff, und diese Dateien erscheinen

@@ -12,21 +12,16 @@
       <img src="../icons/icon-48.png" alt="" width="40" height="40">
       <div>
         <h1>DropTo</h1>
-        <p class="sub">Ziele pro Konto festlegen. Gespeichert wird unter
-          <code>&lt;Download-Ordner&gt;/&lt;Ziel&gt;/</code></p>
+        <p class="sub">Ziele pro Konto festlegen — je ein Ordner, in den die
+          Anhänge gespeichert werden.</p>
       </div>
     </header>
 
     <div class="notice" role="note">
-      <p><strong>Wichtig:</strong> Alle Pfade sind relativ zum
-        <strong>Download-Ordner von Thunderbird</strong>. Dieser wird in den
-        Thunderbird-Einstellungen festgelegt: <em>Einstellungen &rarr; Allgemein &rarr;
-        Dateien &amp; Anhänge &rarr; „Alle Dateien in diesem Ordner ablegen"</em>.
-        Beispiel: Steht dort <code>~/Downloads</code>, wird das Ziel
-        <code>folderA/Rechnungen</code> unter
-        <code>~/Downloads/folderA/Rechnungen/</code> abgelegt.
-        Pfade, die mit <code>/</code>, <code>~/</code> oder <code>C:\</code> beginnen,
-        sind absolut und speichern außerhalb des Download-Ordners.</p>
+      <p><strong>So funktioniert's:</strong> Lege pro Konto — oder unter
+        „Alle Konten" — Ziele an und wähle für jedes über <strong>📁</strong>
+        einen Ordner. Die Anhänge werden direkt in den gewählten Ordner
+        gespeichert, an beliebiger Stelle im Dateisystem.</p>
     </div>
 
     <section class="card">
@@ -38,11 +33,9 @@
 
     <section class="card">
       <h2>Konten &amp; Ziele</h2>
-      <p class="hint">Konto-Ziele erscheinen nur bei E-Mails des
-        jeweiligen Kontos. Der <strong>Pfad</strong> ist relativ zum
-        Download-Ordner von Thunderbird; Unterordner mit <code>/</code> möglich (z.&nbsp;B.
-        <code>folderA/Rechnungen</code>). Der <strong>Name</strong> ist frei und erscheint im Menü
-        (leer = Pfad).</p>
+      <p class="hint">Konto-Ziele erscheinen nur bei E-Mails des jeweiligen
+        Kontos. Wähle den Ordner über <strong>📁</strong>. Der <strong>Name</strong>
+        ist frei und erscheint im Menü (leer = Ordnerpfad).</p>
       <div id="accounts" class="accounts">
         <p class="loading">Konten werden geladen&hellip;</p>
       </div>
