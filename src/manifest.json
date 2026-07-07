@@ -3,7 +3,8 @@
   "name": "DropTo",
   "version": "0.0.0",
   "author": "Johannes Erchen",
-  "description": "Legt E-Mail-Anhänge per Kontextmenü mit einem Klick in vordefinierte Ordner ab. Pro Konto lassen sich mehrere Ziele festlegen, die als Untermenü erscheinen.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "homepage_url": "https://github.com/jerchende/thunderbird-dropto-extension",
   "browser_specific_settings": {
     "gecko": {

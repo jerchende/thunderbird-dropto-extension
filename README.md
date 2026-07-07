@@ -23,6 +23,8 @@ direkt darin — an beliebiger Stelle im Dateisystem.
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
 - Optionales Debug-Logging.
+- Mehrsprachig: Englisch (Standard) und Deutsch; weitere Sprachen über
+  `src/_locales/`.
 
 ## Installation (fertiges Paket)
 
@@ -122,6 +124,7 @@ Für den Eigengebrauch genügt die unsignierte `.xpi` plus
 ```
 src/
   manifest.json
+  _locales/              # Übersetzungen (en = default, de)
   background.js          # Menü (dynamisch) + Speichern-Logik
   experiments/
     filesystem/          # Experiment "droptoFs" (Ordner-Dialog + Schreiben)

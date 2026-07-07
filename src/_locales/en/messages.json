@@ -1,0 +1,48 @@
+{
+  "extDescription": {
+    "message": "Files e-mail attachments into predefined folders with one click from the context menu. Multiple targets can be set up per account and appear as a submenu."
+  },
+
+  "menuNoTargets": { "message": "No targets configured" },
+
+  "notifyNoMessageTitle": { "message": "No e-mail found" },
+  "notifyNoMessageBody": { "message": "Could not determine the related message." },
+  "notifyNoAttachmentTitle": { "message": "No attachment" },
+  "notifyNoAttachmentBody": { "message": "No attachment found to save." },
+  "notifySavedOneTitle": { "message": "Saved" },
+  "notifySavedManyTitle": {
+    "message": "$COUNT$ attachments saved",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "notifyNothingSavedTitle": { "message": "Nothing saved" },
+  "notifyNothingSavedBody": { "message": "All attachments failed (details in the console)." },
+  "notifyErrorTitle": { "message": "Error while saving" },
+
+  "optionsTitle": { "message": "DropTo - Settings" },
+  "optionsTagline": { "message": "Define targets per account — each one a folder where attachments get saved." },
+  "optionsNoticeTitle": { "message": "How it works:" },
+  "optionsNoticeBody": { "message": "Add targets per account — or under \"All accounts\" — and pick a folder for each via 📁. Attachments are saved straight into the chosen folder, anywhere on your file system." },
+
+  "globalCardTitle": { "message": "All accounts" },
+  "globalCardHint": { "message": "Account-independent targets — shown for every e-mail, above the account targets." },
+  "accountsCardTitle": { "message": "Accounts & targets" },
+  "accountsCardHint": { "message": "Account targets are only shown for e-mails of the respective account. Pick the folder via 📁. The name is free text and appears in the menu (empty = folder path)." },
+  "debugLabel": { "message": "Debug logging to the console (Add-ons → gear icon → \"Debug Add-ons\" → Inspect)" },
+
+  "loadingAccounts": { "message": "Loading accounts…" },
+  "accountsLoadError": { "message": "Could not load accounts: " },
+  "noAccounts": { "message": "No accounts found." },
+  "accountNoName": { "message": "(unnamed)" },
+
+  "addTarget": { "message": "+ Add target" },
+  "labelPlaceholder": { "message": "Name (optional)" },
+  "pathPlaceholder": { "message": "Pick folder via 📁" },
+  "pickFolderTitle": { "message": "Pick folder…" },
+  "pickFolderAria": { "message": "Pick folder" },
+  "pickDialogTitle": { "message": "Choose target folder" },
+  "removeTarget": { "message": "Remove target" },
+
+  "savedStatus": { "message": "Saved." },
+  "saveError": { "message": "Error while saving: " },
+  "pickerError": { "message": "Folder dialog failed: " }
+}

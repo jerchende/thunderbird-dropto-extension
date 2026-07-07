@@ -30,6 +30,7 @@ schlagen `npm install`/`build` mit dem Default-Node fehl.
 ## Struktur
 
 - `src/manifest.json` — MV2, Permissions, `options_ui`, Icons.
+- `src/_locales/{en,de}/messages.json` — alle UI-Texte (`default_locale: en`).
 - `src/background.js` — Menüaufbau, `onShown`-Dynamik, `onClicked`-Speichern.
 - `src/options/` — Einstellungsseite (Vanilla JS/HTML/CSS, kein Framework).
 - `src/experiments/filesystem/` — Experiment `droptoFs` (privilegiert:
@@ -77,6 +78,11 @@ schlagen `npm install`/`build` mit dem Default-Node fehl.
   stehen fix auf `0.0.0` (Snapshot-Marker für lokale/CI-Builds) und werden NIE
   manuell gebumpt; `release.yml` stempelt beim Tag-Build (`vX.Y.Z`) die
   Tag-Version ins Manifest.
+- **UI-Texte nur über `_locales`.** Keine hartkodierten sichtbaren Strings:
+  JS via `messenger.i18n.getMessage` (options: Helfer `t()`), statisches HTML
+  via `data-i18n`-Attribut + `localize()`. `de` und `en` müssen dieselben
+  Schlüssel haben; im JSON keine typografischen Anführungszeichen als
+  ASCII-`"` verwenden (zerbricht das JSON).
 - **Extension-ID nicht ändern.** `dropto@jerchende.github.io` — `storage.local`
   hängt an der ID (`browser_specific_settings.gecko.id`); ein Wechsel = neues
   Add-on = leere Einstellungen, und bei ATN ist die ID dauerhaft.

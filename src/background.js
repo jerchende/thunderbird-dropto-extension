@@ -100,7 +100,7 @@ async function rebuildMenu() {
   await create({
     id: EMPTY_ID,
     parentId: ROOT_ID,
-    title: "Keine Ziele konfiguriert",
+    title: messenger.i18n.getMessage("menuNoTargets"),
     contexts: ATTACH_CONTEXTS,
     enabled: false,
     visible: globalCount === 0,
@@ -153,7 +153,8 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
   try {
     const message = await getMessage(info, tab);
     if (!message) {
-      await notify("Keine E-Mail gefunden", "Konnte die zugehoerige Nachricht nicht ermitteln.");
+      await notify(messenger.i18n.getMessage("notifyNoMessageTitle"),
+        messenger.i18n.getMessage("notifyNoMessageBody"));
       return;
     }
 
@@ -161,7 +162,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
     await saveAttachments(message, partNames, meta.path);
   } catch (e) {
     err("Abbruch:", e);
-    await notify("Fehler beim Ablegen", String(e && e.message ? e.message : e));
+    await notify(messenger.i18n.getMessage("notifyErrorTitle"), String(e && e.message ? e.message : e));
   }
 });
 
@@ -170,7 +171,8 @@ async function saveAttachments(message, partNames, path) {
   const dir = String(path == null ? "" : path).trim();
 
   if (!partNames.length) {
-    await notify("Kein Anhang", "Kein Anhang zum Speichern gefunden.");
+    await notify(messenger.i18n.getMessage("notifyNoAttachmentTitle"),
+      messenger.i18n.getMessage("notifyNoAttachmentBody"));
     return;
   }
 
@@ -186,9 +188,12 @@ async function saveAttachments(message, partNames, path) {
   }
 
   if (saved > 0) {
-    await notify(saved === 1 ? "Abgelegt" : `${saved} Anhaenge abgelegt`, `\u2192 ${dir}/`);
+    await notify(saved === 1
+      ? messenger.i18n.getMessage("notifySavedOneTitle")
+      : messenger.i18n.getMessage("notifySavedManyTitle", [String(saved)]), `\u2192 ${dir}/`);
   } else {
-    await notify("Nichts gespeichert", "Alle Anhaenge fehlgeschlagen (Details in der Konsole).");
+    await notify(messenger.i18n.getMessage("notifyNothingSavedTitle"),
+      messenger.i18n.getMessage("notifyNothingSavedBody"));
   }
 }
 

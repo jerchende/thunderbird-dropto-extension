@@ -1,0 +1,48 @@
+{
+  "extDescription": {
+    "message": "Legt E-Mail-Anhänge per Kontextmenü mit einem Klick in vordefinierte Ordner ab. Pro Konto lassen sich mehrere Ziele festlegen, die als Untermenü erscheinen."
+  },
+
+  "menuNoTargets": { "message": "Keine Ziele konfiguriert" },
+
+  "notifyNoMessageTitle": { "message": "Keine E-Mail gefunden" },
+  "notifyNoMessageBody": { "message": "Konnte die zugehörige Nachricht nicht ermitteln." },
+  "notifyNoAttachmentTitle": { "message": "Kein Anhang" },
+  "notifyNoAttachmentBody": { "message": "Kein Anhang zum Speichern gefunden." },
+  "notifySavedOneTitle": { "message": "Abgelegt" },
+  "notifySavedManyTitle": {
+    "message": "$COUNT$ Anhänge abgelegt",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "notifyNothingSavedTitle": { "message": "Nichts gespeichert" },
+  "notifyNothingSavedBody": { "message": "Alle Anhänge fehlgeschlagen (Details in der Konsole)." },
+  "notifyErrorTitle": { "message": "Fehler beim Ablegen" },
+
+  "optionsTitle": { "message": "DropTo - Einstellungen" },
+  "optionsTagline": { "message": "Ziele pro Konto festlegen — je ein Ordner, in den die Anhänge gespeichert werden." },
+  "optionsNoticeTitle": { "message": "So funktioniert's:" },
+  "optionsNoticeBody": { "message": "Lege pro Konto — oder unter „Alle Konten“ — Ziele an und wähle für jedes über 📁 einen Ordner. Die Anhänge werden direkt in den gewählten Ordner gespeichert, an beliebiger Stelle im Dateisystem." },
+
+  "globalCardTitle": { "message": "Alle Konten" },
+  "globalCardHint": { "message": "Kontounabhängige Ziele — erscheinen bei jeder E-Mail oberhalb der Konto-Ziele." },
+  "accountsCardTitle": { "message": "Konten & Ziele" },
+  "accountsCardHint": { "message": "Konto-Ziele erscheinen nur bei E-Mails des jeweiligen Kontos. Ordner über 📁 wählen. Der Name ist frei und erscheint im Menü (leer = Ordnerpfad)." },
+  "debugLabel": { "message": "Debug-Logging in die Konsole (Add-ons → Zahnrad → „Add-ons debuggen“ → Untersuchen)" },
+
+  "loadingAccounts": { "message": "Konten werden geladen…" },
+  "accountsLoadError": { "message": "Konten konnten nicht geladen werden: " },
+  "noAccounts": { "message": "Keine Konten gefunden." },
+  "accountNoName": { "message": "(ohne Namen)" },
+
+  "addTarget": { "message": "+ Ziel hinzufügen" },
+  "labelPlaceholder": { "message": "Name (optional)" },
+  "pathPlaceholder": { "message": "Ordner über 📁 wählen" },
+  "pickFolderTitle": { "message": "Ordner wählen…" },
+  "pickFolderAria": { "message": "Ordner wählen" },
+  "pickDialogTitle": { "message": "Zielordner wählen" },
+  "removeTarget": { "message": "Ziel entfernen" },
+
+  "savedStatus": { "message": "Gespeichert." },
+  "saveError": { "message": "Fehler beim Speichern: " },
+  "pickerError": { "message": "Ordner-Dialog fehlgeschlagen: " }
+}
