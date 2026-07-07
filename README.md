@@ -20,6 +20,8 @@ Gespeichert wird unter `<Download-Ordner>/<Ziel-Pfad>/`, z. B.
   zeigt das Menü einen deaktivierten Hinweis.
 - Absolute Zielpfade (beginnend mit `/`, `~/` oder `C:\`) speichern außerhalb
   des Download-Ordners — per Eingabe oder Ordner-Dialog (📁-Button).
+- DropTo-Untermenü auch im Dropdown des „Speichern"/„Alle speichern"-Buttons
+  der Anhangsleiste (speichert alle Anhänge der Mail).
 - Kein Speichern-Dialog, keine Ordnersuche. Bei Namensgleichheit wird
   automatisch nummeriert (`(1)`, `(2)`, …).
 - Optionales Debug-Logging.
@@ -69,6 +71,10 @@ Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurze
   direkt via `IOUtils` — deshalb zeigt Thunderbird bei der Installation eine
   Warnung über vollen Zugriff, und diese Dateien erscheinen nicht in der
   Download-Historie.
+- Das zweite Experiment `droptoMenu` hängt das DropTo-Untermenü in die
+  Dropdowns der Speichern-Buttons der Anhangsleiste. Es nutzt
+  Thunderbird-interne IDs — nach einem TB-Umbau fehlt der Eintrag
+  schlimmstenfalls einfach, der Rest des Add-ons bleibt unberührt.
 - **Manifest V2** ist Absicht: persistenter Background, maximale Kompatibilität,
   keine Event-Page-/Service-Worker-Fallstricke. Läuft ab Thunderbird 115.
 
@@ -125,6 +131,9 @@ src/
   background.js          # Menü (dynamisch) + Speichern-Logik
   experiments/
     filesystem/          # Experiment "droptoFs" (absolute Pfade, Ordner-Dialog)
+      schema.json
+      implementation.js
+    saveallmenu/         # Experiment "droptoMenu" (Save-Button-Dropdown)
       schema.json
       implementation.js
   options/               # Einstellungsseite

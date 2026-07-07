@@ -31,6 +31,8 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
 - `src/options/` — Einstellungsseite (Vanilla JS/HTML/CSS, kein Framework).
 - `src/experiments/filesystem/` — Experiment `droptoFs` (privilegiert:
   IOUtils-Schreiben an absolute Pfade, nativer Ordner-Picker).
+- `src/experiments/saveallmenu/` — Experiment `droptoMenu` (DropTo im
+  Speichern-Button-Dropdown; nur Menü-Injektion, keine Speicherlogik).
 - `src/icons/icon.svg` — Icon-Quelle; PNGs sind generiert (nicht von Hand editieren).
 - `scripts/render-icons.mjs`, `.github/workflows/build.yml`, `eslint.config.mjs`.
 
@@ -59,6 +61,14 @@ npm start -- --firefox="/Applications/Thunderbird.app/Contents/MacOS/thunderbird
   `sanitizePath` laufen (zerstört den Präfix) — nur der Dateiname wird mit
   `sanitizeSeg` bereinigt, `..` weist das Experiment ab. Das Experiment
   (`src/experiments/filesystem/`) bewusst schmal halten.
+- **Save-Button-Dropdown (`droptoMenu`).** Das Experiment
+  `src/experiments/saveallmenu/` injiziert bei `popupshowing` in die Popups
+  `attachmentSaveAllSingleMenu`/`attachmentSaveAllMultipleMenu` von
+  `about:message` (IDs gegen comm-central verifiziert). Es baut NUR Menüs;
+  Klicks feuern `onTargetClicked(message, path)`, gespeichert wird im
+  Background über `saveAttachments`. Fehlen die Popups nach einem TB-Umbau,
+  degradiert das Feature still — niemals werfen. Ziel-Struktur wird per
+  `setDestinations` aus `rebuildMenu()` gepusht.
 - **Pfad-/Namens-Sanitizing** über `sanitizeSeg`/`sanitizePath`: Schrägstriche
   bleiben Trenner, Segmente werden bereinigt, `.`/`..` fallen raus. In der
   ESLint-Config ist `no-control-regex` deshalb **absichtlich aus**.
