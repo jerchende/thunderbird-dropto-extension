@@ -96,14 +96,12 @@ input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px
 .check { display: flex; gap: 10px; align-items: flex-start; }
 .check input { margin-top: 3px; }
 
-.foot { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
-.btn {
-  font: inherit; font-weight: 600; padding: 9px 18px; border-radius: 9px;
-  border: 1px solid var(--border); background: var(--card); color: var(--fg); cursor: pointer;
+/* Speicher-Feedback als fixes Toast unten rechts (Autosave, kein Button). */
+.status {
+  position: fixed; right: 16px; bottom: 16px; padding: 8px 14px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--muted); font-size: 13px; box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+  opacity: 0; transition: opacity .15s ease; pointer-events: none;
 }
-.btn.primary { background: var(--accent); color: var(--accent-fg); border-color: transparent; }
-.btn.primary:hover { filter: brightness(1.05); }
-.btn:active { transform: translateY(1px); }
-
-.status { color: var(--muted); font-size: 13px; }
+.status:not(:empty) { opacity: 1; }
 .status.ok { color: #16a34a; }

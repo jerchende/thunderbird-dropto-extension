@@ -30,9 +30,16 @@
     </div>
 
     <section class="card">
+      <h2>Alle Konten</h2>
+      <p class="hint">Kontounabhängige Ziele — erscheinen bei jeder E-Mail oberhalb
+        der Konto-Ziele.</p>
+      <div id="globalDests" class="accounts"></div>
+    </section>
+
+    <section class="card">
       <h2>Konten &amp; Ziele</h2>
-      <p class="hint">Ziele unter <strong>Alle Konten</strong> erscheinen bei jeder E-Mail,
-        Konto-Ziele nur bei E-Mails des jeweiligen Kontos. Der <strong>Pfad</strong> ist relativ zum
+      <p class="hint">Konto-Ziele erscheinen nur bei E-Mails des
+        jeweiligen Kontos. Der <strong>Pfad</strong> ist relativ zum
         Download-Ordner von Thunderbird; Unterordner mit <code>/</code> möglich (z.&nbsp;B.
         <code>folderA/Rechnungen</code>). Der <strong>Name</strong> ist frei und erscheint im Menü
         (leer = Pfad).</p>
@@ -48,10 +55,7 @@
       </label>
     </section>
 
-    <footer class="foot">
-      <button id="save" class="btn primary">Speichern</button>
-      <span id="status" class="status" role="status" aria-live="polite"></span>
-    </footer>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
   </main>
 
   <script src="options.js"></script>

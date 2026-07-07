@@ -51,7 +51,8 @@ werden alle Anhänge der Mail dorthin gelegt.
     der 📁-Button öffnet einen Ordner-Dialog)
 - **Debug-Logging**.
 
-Gespeichert wird automatisch (und per „Speichern"-Button) in `storage.local`.
+Gespeichert wird automatisch bei jeder Änderung (`storage.local`) — ein kurzes
+„Gespeichert."-Toast unten rechts bestätigt das.
 
 ## Wie es funktioniert / Hinweise
 

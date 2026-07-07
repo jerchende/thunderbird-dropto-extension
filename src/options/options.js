@@ -19,16 +19,15 @@ async function init() {
 
   $("#debug").checked = !!cfg.debug;
 
+  renderGlobalDests(cfg);
   await renderAccounts(cfg);
 
   $("#debug").addEventListener("change", scheduleSave);
-  $("#save").addEventListener("click", () => save(true));
 }
 
 async function renderAccounts(cfg) {
   const container = $("#accounts");
   container.replaceChildren();
-  container.appendChild(renderGlobalBlock((cfg.destinations && cfg.destinations[GLOBAL_KEY]) || []));
 
   let accounts = [];
   try {
@@ -53,8 +52,9 @@ function renderAccount(acc, dests) {
   return renderDestBlock(acc.name || "(ohne Namen)", acc.type || "", email, acc.id, dests);
 }
 
-function renderGlobalBlock(dests) {
-  return renderDestBlock("Alle Konten", "kontounabhängig", "", GLOBAL_KEY, dests);
+function renderGlobalDests(cfg) {
+  const container = $("#globalDests");
+  container.replaceChildren(...buildDests(GLOBAL_KEY, (cfg.destinations && cfg.destinations[GLOBAL_KEY]) || []));
 }
 
 function renderDestBlock(name, tag, email, key, dests) {
@@ -80,6 +80,12 @@ function renderDestBlock(name, tag, email, key, dests) {
     head.appendChild(mail);
   }
 
+  block.append(head, ...buildDests(key, dests));
+  return block;
+}
+
+/* Ziel-Liste + "Ziel hinzufuegen"-Button fuer einen Storage-Schluessel. */
+function buildDests(key, dests) {
   const list = document.createElement("div");
   list.className = "dests";
   list.dataset.accountId = key;
@@ -98,8 +104,7 @@ function renderDestBlock(name, tag, email, key, dests) {
     scheduleSave();
   });
 
-  block.append(head, list, add);
-  return block;
+  return [list, add];
 }
 
 function destRow(dest) {
@@ -173,14 +178,14 @@ function collect() {
 
 function scheduleSave() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => save(false), 400);
+  saveTimer = setTimeout(save, 400);
 }
 
-async function save(explicit) {
+async function save() {
   const cfg = collect();
   try {
     await messenger.storage.local.set(cfg);
-    setStatus(explicit ? "Gespeichert." : "Automatisch gespeichert.", true);
+    setStatus("Gespeichert.", true);
   } catch (e) {
     setStatus("Fehler beim Speichern: " + String(e), false);
   }
