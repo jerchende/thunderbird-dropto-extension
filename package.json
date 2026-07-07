@@ -1,6 +1,6 @@
 {
   "name": "dropto",
-  "version": "3.0.0",
+  "version": "0.0.0",
   "description": "Thunderbird-Add-on: E-Mail-Anhaenge per Kontextmenue in vordefinierte Ordner ablegen - mit mehreren Zielen pro Konto.",
   "private": true,
   "type": "module",

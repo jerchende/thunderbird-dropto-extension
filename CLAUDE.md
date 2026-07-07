@@ -35,7 +35,8 @@ schlagen `npm install`/`build` mit dem Default-Node fehl.
 - `src/experiments/filesystem/` — Experiment `droptoFs` (privilegiert:
   IOUtils-Schreiben in absolute Ordner, nativer Ordner-Picker).
 - `src/icons/icon.svg` — Icon-Quelle; PNGs sind generiert (nicht von Hand editieren).
-- `scripts/render-icons.mjs`, `.github/workflows/build.yml`, `eslint.config.mjs`.
+- `scripts/render-icons.mjs`, `.github/workflows/` (`build.yml` = CI,
+  `release.yml` = Release-on-Tag), `eslint.config.mjs`.
 
 ## Invarianten — nicht „vereinfachen"
 
@@ -72,9 +73,13 @@ schlagen `npm install`/`build` mit dem Default-Node fehl.
   Kollision ausgeschlossen). `path` ist ein absoluter Ordnerpfad (per
   Ordner-Dialog gewählt). Alte Schlüssel `baseDir`/`fallback` und alte relative
   `path`-Werte bleiben bewusst unmigriert liegen.
-- **Extension-ID nicht leichtfertig ändern.** `storage.local` hängt an der ID
-  (`browser_specific_settings.gecko.id`); ein Wechsel = neues Add-on = leere
-  Einstellungen.
+- **Versionierung über Git-Tags.** `src/manifest.json` und `package.json`
+  stehen fix auf `0.0.0` (Snapshot-Marker für lokale/CI-Builds) und werden NIE
+  manuell gebumpt; `release.yml` stempelt beim Tag-Build (`vX.Y.Z`) die
+  Tag-Version ins Manifest.
+- **Extension-ID nicht ändern.** `dropto@jerchende.github.io` — `storage.local`
+  hängt an der ID (`browser_specific_settings.gecko.id`); ein Wechsel = neues
+  Add-on = leere Einstellungen, und bei ATN ist die ID dauerhaft.
 
 ## Tooling-Hinweise
 

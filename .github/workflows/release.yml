@@ -20,14 +20,21 @@ jobs:
 
       - run: npm ci
 
-      - name: Tag muss zur Manifest-Version passen
+      - name: Release-Version aus dem Tag ins Manifest stempeln
         run: |
-          tag="${GITHUB_REF_NAME#v}"
-          version="$(node -p "require('./src/manifest.json').version")"
-          if [ "$tag" != "$version" ]; then
-            echo "Tag v$tag passt nicht zur Manifest-Version $version" >&2
+          version="${GITHUB_REF_NAME#v}"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Tag $GITHUB_REF_NAME ist keine Semver-Version (vX.Y.Z)" >&2
             exit 1
           fi
+          node -e "
+            const fs = require('fs');
+            const p = 'src/manifest.json';
+            const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+            m.version = process.argv[1];
+            fs.writeFileSync(p, JSON.stringify(m, null, 2) + '\n');
+          " "$version"
+          echo "Manifest-Version: $version"
 
       - name: ESLint
         run: npm run lint

@@ -95,11 +95,18 @@ aktivieren).
 ## Build
 
 `npm run build` verpackt `src/` via web-ext zu `dist/dropto-<version>.xpi`.
+Lokale Builds tragen immer die Snapshot-Version `0.0.0`.
 
-## CI
+## CI & Releases
 
 `.github/workflows/build.yml` läuft bei Push/PR: `npm ci`, ESLint, `web-ext lint`
 (informativ) und Build; die fertige `.xpi` wird als Artefakt hochgeladen.
+
+Versioniert wird über Git-Tags (Semantic Versioning): Die Version im Repo steht
+fix auf `0.0.0`, echte Versionen entstehen nur in der Pipeline.
+`git tag v3.1.0 && git push origin v3.1.0` startet
+`.github/workflows/release.yml` — der stempelt `3.1.0` ins Manifest, baut die
+XPI und erstellt das GitHub-Release. Das Manifest nie manuell bumpen.
 
 ## Signieren / Verteilen
 
